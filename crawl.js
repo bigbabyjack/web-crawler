@@ -40,13 +40,34 @@ async function crawlPage(url) {
 		const err = new Error(`HTTP Error: ${response.status}`)
 		console.log(err.message)
 		return
-	} else if (~responstContentType || !responseContentType.includes('text/html')) {
+	} else if (~responseContentType || !responseContentType.includes('text/html')) {
 		const err = new Error(`Response has invalid content-type: ${responseContentType}.`)
 		console.log(err.message)
 		return
 	}
 	const responseText = await response.text()
-	console.log(responseText)
+	return responseText
 }
 
-export { normalizeURL, getURLsFromHTML, crawlPage };
+async function crawlPageR(baseURL, currentURL = baseURL, pages = {}) {
+	const baseURLObj = new URL(baseURL)
+	const currentURLObj = new URL(currentURL)
+	if (baseURLObj.domain !== currentURLObj.domain) {
+		return pages
+	}
+	const normCurrentURL = normalizeURL(currentURL)
+	if (normCurrentURL in pages) {
+		pages[normCurrentURL]++
+		return pages
+	}
+	pages[normCurrentURL] = 1
+	const htmlBody = await crawlPage(currentURL)
+	const urls = getURLsFromHTML(htmlBody)
+	for (const url of urls) {
+		crawlPageR(baseURL, url, pages)
+	}
+
+	return pages
+}
+
+export { normalizeURL, getURLsFromHTML, crawlPageR };

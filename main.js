@@ -1,5 +1,5 @@
 import { argv, exit } from 'node:process'
-import { crawlPage } from './crawl.js'
+import { crawlPageR } from './crawl.js'
 
 async function main() {
 	if (argv.length < 3) {
@@ -13,7 +13,8 @@ async function main() {
 	} else {
 		const baseURL = argv[2]
 		console.log(`Crawling: ${baseURL}`)
-		await crawlPage(baseURL)
+		const pages = await crawlPageR(baseURL)
+		console.log(pages)
 
 	}
 }
