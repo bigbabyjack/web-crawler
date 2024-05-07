@@ -30,13 +30,10 @@ function getURLsFromHTML(htmlBody, baseURL) {
 async function crawlPage(url) {
 	let response
 	try {
-		// console.log(`Fetching: ${url}`)
 		response = await fetch(url)
-		// console.log(`Response: ${response.status} ${response.statusText}`)
 	} catch (err) {
 		throw new Error(`Network error: ${err.message}`)
 	}
-	// console.log(`Fetched: ${url}`)
 	const responseStatus = response.status
 	const responseContentType = response.headers.get('content-type')
 	if (responseStatus >= 400) {
@@ -48,10 +45,7 @@ async function crawlPage(url) {
 		console.log(err.message)
 		return
 	}
-	// console.log(`Crawling: ${url}`)
 	const responseText = await response.text()
-	// console.log(`Response: ${responseText.length} chars`)
-	// console.log(`Crawled: ${url}`)
 	return responseText
 }
 
