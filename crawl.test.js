@@ -1,5 +1,6 @@
 import { test, expect } from "@jest/globals";
 import { normalizeURL, getURLsFromHTML } from "./crawl.js";
+import { sortPages } from "./report.js";
 
 test('normalizeURL protocol', () => {
 	const input = 'https://blog.boot.dev/path'
@@ -50,5 +51,20 @@ test('getURLsFromHTML both', () => {
 	const inputBody = '<html><body><a href="/path/one"><span>Boot.dev></span></a><a href="https://other.com/path/one"><span>Boot.dev></span></a></body></html>'
 	const actual = getURLsFromHTML(inputBody, inputURL)
 	const expected = ['https://blog.boot.dev/path/one', 'https://other.com/path/one']
+	expect(actual).toEqual(expected)
+})
+
+test('sortPages', () => {
+	const input = {
+		'https://blog.boot.dev/path/one': 1,
+		'https://blog.boot.dev/path/two': 2,
+		'https://blog.boot.dev/path/three': 3
+	}
+	const actual = sortPages(input)
+	const expected = [
+		['https://blog.boot.dev/path/three', 3],
+		['https://blog.boot.dev/path/two', 2],
+		['https://blog.boot.dev/path/one', 1]
+	]
 	expect(actual).toEqual(expected)
 })
